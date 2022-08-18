@@ -1,7 +1,7 @@
 # Excessive stripped-down SVG rendering tool for .NET6
 
 ## Fork modifications:
-This repository is a fork from [svg-net](https://github.com/atifaziz/Fizzler). 
+This repository is a fork from [atifaziz/Fizzler](https://github.com/atifaziz/Fizzler). 
 This fork was created, to build a **excessively** stripped down version with only **.NET6** support.
 There will be *no* active development on this fork, other than merging from underlying respositories. For more complex implementation, please visit the relevant forks instead.
 Only use this fork, if you know what you are doing! You have been warned :-)
