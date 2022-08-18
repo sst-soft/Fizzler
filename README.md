@@ -1,3 +1,15 @@
+# Excessive stripped-down SVG rendering tool for .NET6
+
+## Fork modifications:
+This repository is a fork from [svg-net](https://github.com/atifaziz/Fizzler). 
+This fork was created, to build a **excessively** stripped down version with only **.NET6** support.
+There will be *no* active development on this fork, other than merging from underlying respositories. For more complex implementation, please visit the relevant forks instead.
+Only use this fork, if you know what you are doing! You have been warned :-)
+
+# Original Readme.md
+<details><summary>Click to open Readme.md</summary>
+<p>
+
 # Fizzler: .NET CSS Selector Engine
 
 [![Build Status][win-build-badge]][win-builds]
@@ -71,3 +83,7 @@ document.QuerySelectorAll("p:first-child");
 [w3cs3]: https://www.w3.org/TR/selectors-3/
 [fizzhap]: http://www.nuget.org/packages/Fizzler.Systems.HtmlAgilityPack/
 [hap]: http://html-agility-pack.net/
+
+
+</p>
+</details>
