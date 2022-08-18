@@ -1,3 +1,5 @@
+// GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007. https://github.com/sst-soft/Fizzler which is a fork of https://github.com/atifaziz/Fizzler.
+
 #region Copyright and License
 //
 // Fizzler - CSS Selector Engine for Microsoft .NET Framework
@@ -34,16 +36,16 @@ namespace Fizzler
     /// </summary>
     public class SelectorGenerator<TElement> : INegationSelectorGenerator
     {
-        readonly IEqualityComparer<TElement> _equalityComparer;
-        readonly Stack<Selector<TElement>> _selectors;
-        Selector<TElement> _negationSourceSelector;
+        private readonly IEqualityComparer<TElement> _equalityComparer;
+        private readonly Stack<Selector<TElement>> _selectors;
+        private Selector<TElement> _negationSourceSelector;
 
         /// <summary>
         /// Initializes a new instance of this object with an instance
         /// of <see cref="IElementOps{TElement}"/> and the default equality
         /// comparer that is used for determining if two elements are equal.
         /// </summary>
-        public SelectorGenerator(IElementOps<TElement> ops) : this(ops, null) {}
+        public SelectorGenerator(IElementOps<TElement> ops) : this(ops, null) { }
 
         /// <summary>
         /// Initializes a new instance of this object with an instance
@@ -94,7 +96,10 @@ namespace Fizzler
         /// </summary>
         protected void Add(Selector<TElement> selector)
         {
-            if(selector == null) throw new ArgumentNullException(nameof(selector));
+            if (selector == null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
 
             var top = Selector;
             Selector = top == null ? selector : (elements => selector(top(elements)));
@@ -115,7 +120,10 @@ namespace Fizzler
         public virtual void OnSelector()
         {
             if (Selector != null)
+            {
                 _selectors.Push(Selector);
+            }
+
             Selector = null;
         }
 

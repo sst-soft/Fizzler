@@ -1,3 +1,5 @@
+// GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007. https://github.com/sst-soft/Fizzler which is a fork of https://github.com/atifaziz/Fizzler.
+
 #region Copyright and License
 //
 // Fizzler - CSS Selector Engine for Microsoft .NET Framework
@@ -108,10 +110,18 @@ namespace Fizzler
         /// <summary>
         /// Formats this namespace together with a name.
         /// </summary>
-        [Pure] public string Format(string name)
+        [Pure]
+        public string Format(string name)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (name.Length == 0) throw new ArgumentException(null, nameof(name));
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (name.Length == 0)
+            {
+                throw new ArgumentException(null, nameof(name));
+            }
 
             return Text + (IsNone ? null : "|") + name;
         }

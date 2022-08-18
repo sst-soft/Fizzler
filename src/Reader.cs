@@ -1,3 +1,5 @@
+// GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007. https://github.com/sst-soft/Fizzler which is a fork of https://github.com/atifaziz/Fizzler.
+
 #region Copyright and License
 //
 // Fizzler - CSS Selector Engine for Microsoft .NET Framework
@@ -35,15 +37,16 @@ namespace Fizzler
     /// </summary>
     public sealed class Reader<T> : IDisposable, IEnumerable<T>
     {
-        IEnumerator<T> _enumerator;
-        Stack<T> _buffer;
+        private IEnumerator<T> _enumerator;
+        private Stack<T> _buffer;
 
         /// <summary>
         /// Initialize a new <see cref="Reader{T}"/> with a base
         /// <see cref="IEnumerable{T}"/> object.
         /// </summary>
         public Reader(IEnumerable<T> e) :
-            this(e?.GetEnumerator()) { }
+            this(e?.GetEnumerator())
+        { }
 
         /// <summary>
         /// Initialize a new <see cref="Reader{T}"/> with a base
@@ -83,12 +86,16 @@ namespace Fizzler
         public T Read()
         {
             if (!HasMore)
+            {
                 throw new InvalidOperationException();
+            }
 
             var value = _buffer.Pop();
 
             if (_buffer.Count == 0)
+            {
                 RealRead();
+            }
 
             return value;
         }
@@ -102,7 +109,9 @@ namespace Fizzler
         public T Peek()
         {
             if (!HasMore)
+            {
                 throw new InvalidOperationException();
+            }
 
             return _buffer.Peek();
         }
@@ -119,18 +128,22 @@ namespace Fizzler
             return GetEnumeratorImpl();
         }
 
-        IEnumerator<T> GetEnumeratorImpl()
+        private IEnumerator<T> GetEnumeratorImpl()
         {
             while (HasMore)
+            {
                 yield return Read();
+            }
         }
 
-        void RealRead()
+        private void RealRead()
         {
             EnsureAlive();
 
             if (_enumerator.MoveNext())
+            {
                 Unread(_enumerator.Current);
+            }
         }
 
         /// <summary>
@@ -141,19 +154,24 @@ namespace Fizzler
 
         void IDisposable.Dispose() => Dispose();
 
-        void Dispose()
+        private void Dispose()
         {
-            if(_enumerator == null)
+            if (_enumerator == null)
+            {
                 return;
+            }
+
             _enumerator.Dispose();
             _enumerator = null;
             _buffer = null;
         }
 
-        void EnsureAlive()
+        private void EnsureAlive()
         {
             if (_enumerator == null)
+            {
                 throw new ObjectDisposedException(GetType().Name);
+            }
         }
     }
 }

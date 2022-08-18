@@ -1,25 +1,4 @@
-//
-// Copyright (c) 2008 Novell, Inc. (http://www.novell.com)
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007. https://github.com/sst-soft/Fizzler which is a fork of https://github.com/atifaziz/Fizzler.
 
 namespace Fizzler
 {
@@ -32,10 +11,10 @@ namespace Fizzler
 
     // Adapted from Mono Rocks
 
-    abstract class Either<TA, TB>
+    internal abstract class Either<TA, TB>
             : IEquatable<Either<TA, TB>>
     {
-        Either() {}
+        private Either() { }
 
         public static Either<TA, TB> A(TA value) => new AImpl(value);
         public static Either<TA, TB> B(TB value) => new BImpl(value);
@@ -47,9 +26,9 @@ namespace Fizzler
         public abstract TResult Fold<TResult>(Func<TA, TResult> a, Func<TB, TResult> b);
         public abstract TResult Fold<T, TResult>(T arg, Func<T, TA, TResult> a, Func<T, TB, TResult> b);
 
-        sealed class AImpl : Either<TA, TB>
+        private sealed class AImpl : Either<TA, TB>
         {
-            readonly TA _value;
+            private readonly TA _value;
 
             public AImpl(TA value) => _value = value;
 
@@ -64,15 +43,31 @@ namespace Fizzler
 
             public override TResult Fold<TResult>(Func<TA, TResult> a, Func<TB, TResult> b)
             {
-                if (a == null) throw new ArgumentNullException(nameof(a));
-                if (b == null) throw new ArgumentNullException(nameof(b));
+                if (a == null)
+                {
+                    throw new ArgumentNullException(nameof(a));
+                }
+
+                if (b == null)
+                {
+                    throw new ArgumentNullException(nameof(b));
+                }
+
                 return a(_value);
             }
 
             public override TResult Fold<T, TResult>(T arg, Func<T, TA, TResult> a, Func<T, TB, TResult> b)
             {
-                if (a == null) throw new ArgumentNullException(nameof(a));
-                if (b == null) throw new ArgumentNullException(nameof(b));
+                if (a == null)
+                {
+                    throw new ArgumentNullException(nameof(a));
+                }
+
+                if (b == null)
+                {
+                    throw new ArgumentNullException(nameof(b));
+                }
+
                 return a(arg, _value);
             }
 
@@ -80,9 +75,9 @@ namespace Fizzler
                 _value?.ToString() ?? string.Empty;
         }
 
-        sealed class BImpl : Either<TA, TB>
+        private sealed class BImpl : Either<TA, TB>
         {
-            readonly TB _value;
+            private readonly TB _value;
 
             public BImpl(TB value) => _value = value;
 
@@ -97,15 +92,31 @@ namespace Fizzler
 
             public override TResult Fold<TResult>(Func<TA, TResult> a, Func<TB, TResult> b)
             {
-                if (a == null) throw new ArgumentNullException(nameof(a));
-                if (b == null) throw new ArgumentNullException(nameof(b));
+                if (a == null)
+                {
+                    throw new ArgumentNullException(nameof(a));
+                }
+
+                if (b == null)
+                {
+                    throw new ArgumentNullException(nameof(b));
+                }
+
                 return b(_value);
             }
 
             public override TResult Fold<T, TResult>(T arg, Func<T, TA, TResult> a, Func<T, TB, TResult> b)
             {
-                if (a == null) throw new ArgumentNullException(nameof(a));
-                if (b == null) throw new ArgumentNullException(nameof(b));
+                if (a == null)
+                {
+                    throw new ArgumentNullException(nameof(a));
+                }
+
+                if (b == null)
+                {
+                    throw new ArgumentNullException(nameof(b));
+                }
+
                 return b(arg, _value);
             }
 

@@ -1,3 +1,5 @@
+// GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007. https://github.com/sst-soft/Fizzler which is a fork of https://github.com/atifaziz/Fizzler.
+
 #region Copyright and License
 //
 // Fizzler - CSS Selector Engine for Microsoft .NET Framework
@@ -38,7 +40,7 @@ namespace Fizzler
         /// </summary>
         public string Text { get; }
 
-        Token(TokenKind kind, string text = null) : this()
+        private Token(TokenKind kind, string text = null) : this()
         {
             Kind = kind;
             Text = text;
@@ -50,15 +52,15 @@ namespace Fizzler
         public static Token Eoi() =>
             new Token(TokenKind.Eoi);
 
-        static readonly Token StarToken = Char('*');
-        static readonly Token DotToken = Char('.');
-        static readonly Token ColonToken = Char(':');
-        static readonly Token CommaToken = Char(',');
-        static readonly Token RightParenthesisToken = Char(')');
-        static readonly Token EqualsToken = Char('=');
-        static readonly Token PipeToken = Char('|');
-        static readonly Token LeftBracketToken = Char('[');
-        static readonly Token RightBracketToken = Char(']');
+        private static readonly Token StarToken = Char('*');
+        private static readonly Token DotToken = Char('.');
+        private static readonly Token ColonToken = Char(':');
+        private static readonly Token CommaToken = Char(',');
+        private static readonly Token RightParenthesisToken = Char(')');
+        private static readonly Token EqualsToken = Char('=');
+        private static readonly Token PipeToken = Char('|');
+        private static readonly Token LeftBracketToken = Char('[');
+        private static readonly Token RightBracketToken = Char(']');
 
         /// <summary>
         /// Creates a star token.
@@ -235,7 +237,7 @@ namespace Fizzler
         /// Performs a logical comparison of the two tokens to determine
         /// whether they are equal.
         /// </summary>
-        public static bool operator==(Token a, Token b) => a.Equals(b);
+        public static bool operator ==(Token a, Token b) => a.Equals(b);
 
         /// <summary>
         /// Performs a logical comparison of the two tokens to determine
@@ -243,10 +245,17 @@ namespace Fizzler
         /// </summary>
         public static bool operator !=(Token a, Token b) => !a.Equals(b);
 
-        static void ValidateTextArgument(string text)
+        private static void ValidateTextArgument(string text)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
-            if (text.Length == 0) throw new ArgumentException(null, nameof(text));
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            if (text.Length == 0)
+            {
+                throw new ArgumentException(null, nameof(text));
+            }
         }
     }
 }

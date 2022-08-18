@@ -1,3 +1,5 @@
+// GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007. https://github.com/sst-soft/Fizzler which is a fork of https://github.com/atifaziz/Fizzler.
+
 #region Copyright and License
 //
 // Fizzler - CSS Selector Engine for Microsoft .NET Framework
@@ -55,11 +57,15 @@ namespace Fizzler
         /// </remarks>
         public static Func<string, T> Create<T>(Func<string, T> compiler, IDictionary<string, T> cache)
         {
-            if(compiler == null) throw new ArgumentNullException(nameof(compiler));
+            if (compiler == null)
+            {
+                throw new ArgumentNullException(nameof(compiler));
+            }
+
             return CreateImpl(compiler, cache ?? new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase));
         }
 
-        static Func<string, T> CreateImpl<T>(Func<string, T> compiler, IDictionary<string, T> cache)
+        private static Func<string, T> CreateImpl<T>(Func<string, T> compiler, IDictionary<string, T> cache)
         {
             Debug.Assert(compiler != null);
             Debug.Assert(cache != null);

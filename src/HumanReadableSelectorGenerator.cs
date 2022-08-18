@@ -1,3 +1,5 @@
+// GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007. https://github.com/sst-soft/Fizzler which is a fork of https://github.com/atifaziz/Fizzler.
+
 #region Copyright and License
 //
 // Fizzler - CSS Selector Engine for Microsoft .NET Framework
@@ -29,7 +31,7 @@ namespace Fizzler
     /// </summary>
     public class HumanReadableSelectorGenerator : ISelectorGenerator
     {
-        int _chainCount;
+        private int _chainCount;
 
         /// <summary>
         /// Initializes the text.
@@ -47,9 +49,13 @@ namespace Fizzler
         public virtual void OnSelector()
         {
             if (string.IsNullOrEmpty(Text))
+            {
                 Text = "Take all";
+            }
             else
+            {
                 Text += " and select them. Combined with previous, take all";
+            }
         }
 
         /// <summary>

@@ -1,48 +1,37 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.0;netstandard2.0</TargetFrameworks>
-    <LangVersion>7</LangVersion>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Fizzler.snk</AssemblyOriginatorKeyFile>
-    <VersionPrefix>1.3.0</VersionPrefix>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <Authors>Atif Aziz, Colin Ramsay</Authors>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <SignAssembly>True</SignAssembly>
+    <Title>Fizzler</Title>
     <Description>Fizzler is a W3C Selectors parser and generic selector framework for document hierarchies.</Description>
+    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <FileVersion>2.0.0</FileVersion>
+    <Company>$(AssemblyName)-Community</Company>
+    <Authors>Atif Aziz, Colin Ramsay, sst-soft</Authors>
+    <Product>$(AssemblyName)</Product>
+    <Copyright>Copyright © 2009 Atif Aziz, Colin Ramsay. All rights reserved. Portions Copyright © 2008 Novell, Inc. SST-Soft modifed.</Copyright>
+    <PackageProjectUrl>https://github.com/sst-soft/Fizzler</PackageProjectUrl>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/sst-soft/Fizzler</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageLicenseFile>COPYING.txt</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/atifaziz/Fizzler</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/atifaziz/Fizzler</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageTags>selectors w3c</PackageTags>
-    <PackageIconUrl></PackageIconUrl>
-    <PackageOutputPath>..\dist</PackageOutputPath>
-    <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
-    <Copyright>Copyright © 2009 Atif Aziz, Colin Ramsay. All rights reserved. Portions Copyright © 2008 Novell, Inc.</Copyright>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <EmbedUntrackedSource>true</EmbedUntrackedSource>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <PackageId>$(AssemblyName)</PackageId>
+    <PackageReleaseNotes>Based on https://github.com/atifaziz/Fizzler version 1.3.0, Feb.2021. Excessive strip-down. '.NET6' only.</PackageReleaseNotes>
+    <AssemblyOriginatorKeyFile>Fizzler.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\bin\Debug\</OutputPath>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\bin\Release\</OutputPath>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.0'">
-    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
-  </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\COPYING.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
+    <None Include="..\COPYING.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
-  </ItemGroup>
 
 </Project>

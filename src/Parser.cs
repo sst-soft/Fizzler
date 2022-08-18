@@ -1,3 +1,5 @@
+// GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007. https://github.com/sst-soft/Fizzler which is a fork of https://github.com/atifaziz/Fizzler.
+
 #region Copyright and License
 //
 // Fizzler - CSS Selector Engine for Microsoft .NET Framework
@@ -38,10 +40,10 @@ namespace Fizzler
     /// </summary>
     public sealed class Parser
     {
-        readonly Reader<Token> _reader;
-        readonly ISelectorGenerator _generator;
+        private readonly Reader<Token> _reader;
+        private readonly ISelectorGenerator _generator;
 
-        Parser(Reader<Token> reader, ISelectorGenerator generator)
+        private Parser(Reader<Token> reader, ISelectorGenerator generator)
         {
             Debug.Assert(reader != null);
             Debug.Assert(generator != null);
@@ -62,8 +64,15 @@ namespace Fizzler
         public static T Parse<TGenerator, T>(string selectors, TGenerator generator, Func<TGenerator, T> resultor)
             where TGenerator : ISelectorGenerator
         {
-            if (selectors == null) throw new ArgumentNullException(nameof(selectors));
-            if (selectors.Length == 0) throw new ArgumentException(null, nameof(selectors));
+            if (selectors == null)
+            {
+                throw new ArgumentNullException(nameof(selectors));
+            }
+
+            if (selectors.Length == 0)
+            {
+                throw new ArgumentException(null, nameof(selectors));
+            }
 
             return Parse(Tokener.Tokenize(selectors), generator, resultor);
         }
@@ -83,23 +92,30 @@ namespace Fizzler
         public static T Parse<TGenerator, T>(IEnumerable<Token> tokens, TGenerator generator, Func<TGenerator, T> resultor)
             where TGenerator : ISelectorGenerator
         {
-            if (tokens == null) throw new ArgumentNullException(nameof(tokens));
-            if (resultor == null) throw new ArgumentNullException(nameof(resultor));
+            if (tokens == null)
+            {
+                throw new ArgumentNullException(nameof(tokens));
+            }
+
+            if (resultor == null)
+            {
+                throw new ArgumentNullException(nameof(resultor));
+            }
 
             new Parser(new Reader<Token>(tokens.GetEnumerator()), generator).Parse();
             return resultor(generator);
         }
 
-        static partial class TokenSpecs { }
+        private static partial class TokenSpecs { }
 
-        void Parse()
+        private void Parse()
         {
             _generator.OnInit();
             SelectorGroup();
             _generator.OnClose();
         }
 
-        void SelectorGroup()
+        private void SelectorGroup()
         {
             //selectors_group
             //  : selector [ COMMA S* selector ]*
@@ -115,7 +131,7 @@ namespace Fizzler
             Read(ToTokenSpec(TokenKind.Eoi));
         }
 
-        void Selector()
+        private void Selector()
         {
             _generator.OnSelector();
 
@@ -125,10 +141,12 @@ namespace Fizzler
 
             SimpleSelectorSequence();
             while (TryCombinator())
+            {
                 SimpleSelectorSequence();
+            }
         }
 
-        partial class TokenSpecs // ReSharper disable once InconsistentNaming
+        private partial class TokenSpecs // ReSharper disable once InconsistentNaming
         {
             public static readonly TokenSpec[] Plus_Greater_Tilde_WhiteSpace =
             {
@@ -139,7 +157,7 @@ namespace Fizzler
             };
         }
 
-        bool TryCombinator()
+        private bool TryCombinator()
         {
             //combinator
             //  /* combinators can be surrounded by whitespace */
@@ -149,7 +167,9 @@ namespace Fizzler
             var token = TryRead(TokenSpecs.Plus_Greater_Tilde_WhiteSpace);
 
             if (token == null)
+            {
                 return false;
+            }
 
             if (token.Value.Kind == TokenKind.WhiteSpace)
             {
@@ -170,7 +190,7 @@ namespace Fizzler
             return true;
         }
 
-        partial class TokenSpecs // ReSharper disable once InconsistentNaming
+        private partial class TokenSpecs // ReSharper disable once InconsistentNaming
         {
             public static readonly TokenSpec[] Hash_Dot_LeftBracket_Colon =
             {
@@ -190,7 +210,7 @@ namespace Fizzler
             };
         }
 
-        void SimpleSelectorSequence()
+        private void SimpleSelectorSequence()
         {
             //simple_selector_sequence
             //  : [ type_selector | universal ]
@@ -206,46 +226,51 @@ namespace Fizzler
                 if (token == null)
                 {
                     if (named || modifiers > 0)
+                    {
                         break;
+                    }
+
                     TypeSelectorOrUniversal();
                     named = true;
                 }
                 else
                 {
                     if (modifiers == 0 && !named)
+                    {
                         _generator.Universal(NamespacePrefix.None); // implied
+                    }
 
                     switch (token.Value.Kind)
                     {
                         case TokenKind.Not:
-                        {
-                            Unread(token.Value);
-                            Negation();
-                            break;
-                        }
-                        case TokenKind.Hash:
-                        {
-                            _generator.Id(token.Value.Text);
-                            break;
-                        }
-                        default:
-                        {
-                            Unread(token.Value);
-                            switch (token.Value.Text[0])
                             {
-                                case '.': Class(); break;
-                                case '[': Attrib(); break;
-                                case ':': Pseudo(); break;
-                                default: throw new Exception("Internal error.");
+                                Unread(token.Value);
+                                Negation();
+                                break;
                             }
-                            break;
-                        }
+                        case TokenKind.Hash:
+                            {
+                                _generator.Id(token.Value.Text);
+                                break;
+                            }
+                        default:
+                            {
+                                Unread(token.Value);
+                                switch (token.Value.Text[0])
+                                {
+                                    case '.': Class(); break;
+                                    case '[': Attrib(); break;
+                                    case ':': Pseudo(); break;
+                                    default: throw new Exception("Internal error.");
+                                }
+                                break;
+                            }
                     }
                 }
             }
         }
 
-        void Negation()
+        private void Negation()
         {
             //negation
             //  : NOT S* negation_arg S* ')'
@@ -255,7 +280,9 @@ namespace Fizzler
             TryRead(ToTokenSpec(TokenKind.WhiteSpace));
             var generator = _generator as INegationSelectorGenerator;
             if (generator == null)
+            {
                 throw new NotSupportedException("Negation pseudo-class is not supported.");
+            }
 
             generator.BeginNegation();
 
@@ -296,7 +323,7 @@ namespace Fizzler
             generator.EndNegation();
         }
 
-        void Pseudo()
+        private void Pseudo()
         {
             //pseudo
             //  /* '::' starts a pseudo-element, ':' a pseudo-class */
@@ -309,7 +336,7 @@ namespace Fizzler
             PseudoClass(); // We do pseudo-class only for now
         }
 
-        void PseudoClass()
+        private void PseudoClass()
         {
             //pseudo
             //  : ':' [ IDENT | functional_pseudo ]
@@ -334,7 +361,7 @@ namespace Fizzler
             }
         }
 
-        bool TryFunctionalPseudo()
+        private bool TryFunctionalPseudo()
         {
             //functional_pseudo
             //  : FUNCTION S* expression ')'
@@ -342,7 +369,9 @@ namespace Fizzler
 
             var token = TryRead(ToTokenSpec(TokenKind.Function));
             if (token == null)
+            {
                 return false;
+            }
 
             TryRead(ToTokenSpec(TokenKind.WhiteSpace));
 
@@ -362,7 +391,7 @@ namespace Fizzler
             return true;
         }
 
-        void Nth()
+        private void Nth()
         {
             //nth
             //  : S* [ ['-'|'+']? INTEGER? {N} [ S* ['-'|'+'] S* INTEGER ]? |
@@ -375,7 +404,7 @@ namespace Fizzler
             _generator.NthChild(1, NthB());
         }
 
-        void NthLast()
+        private void NthLast()
         {
             //nth
             //  : S* [ ['-'|'+']? INTEGER? {N} [ S* ['-'|'+'] S* INTEGER ]? |
@@ -388,12 +417,12 @@ namespace Fizzler
             _generator.NthLastChild(1, NthB());
         }
 
-        int NthB()
+        private int NthB()
         {
             return int.Parse(Read(ToTokenSpec(TokenKind.Integer)).Text, CultureInfo.InvariantCulture);
         }
 
-        partial class TokenSpecs
+        private partial class TokenSpecs
         {
             // ReSharper disable once InconsistentNaming
             public static readonly TokenSpec[] Equals_Includes_DashMatch_PrefixMatch_SuffixMatch_SubstringMatch =
@@ -414,7 +443,7 @@ namespace Fizzler
             };
         }
 
-        void Attrib()
+        private void Attrib()
         {
             //attrib
             //  : '[' S* [ namespace_prefix ]? IDENT S*
@@ -437,7 +466,9 @@ namespace Fizzler
                 var op = TryRead(TokenSpecs.Equals_Includes_DashMatch_PrefixMatch_SuffixMatch_SubstringMatch);
 
                 if (op == null)
+                {
                     break;
+                }
 
                 hasValue = true;
                 var value = Read(TokenSpecs.String_Ident).Text;
@@ -460,12 +491,14 @@ namespace Fizzler
             }
 
             if (!hasValue)
+            {
                 _generator.AttributeExists(prefix, name);
+            }
 
             Read(ToTokenSpec(Token.RightBracket()));
         }
 
-        void Class()
+        private void Class()
         {
             //class
             //  : '.' IDENT
@@ -475,7 +508,7 @@ namespace Fizzler
             _generator.Class(Read(ToTokenSpec(TokenKind.Ident)).Text);
         }
 
-        partial class TokenSpecs // ReSharper disable once InconsistentNaming
+        private partial class TokenSpecs // ReSharper disable once InconsistentNaming
         {
             public static readonly TokenSpec[] Ident_Star_Pipe =
             {
@@ -485,7 +518,7 @@ namespace Fizzler
             };
         }
 
-        NamespacePrefix? TryNamespacePrefix()
+        private NamespacePrefix? TryNamespacePrefix()
         {
             //namespace_prefix
             //  : [ IDENT | '*' ]? '|'
@@ -495,10 +528,14 @@ namespace Fizzler
             var token = TryRead(TokenSpecs.Ident_Star_Pipe);
 
             if (token == null)
+            {
                 return null;
+            }
 
             if (token.Value == pipe)
+            {
                 return NamespacePrefix.Empty;
+            }
 
             var prefix = token.Value;
             if (TryRead(ToTokenSpec(pipe)) == null)
@@ -512,7 +549,7 @@ namespace Fizzler
                  : NamespacePrefix.Any;
         }
 
-        partial class TokenSpecs // ReSharper disable once InconsistentNaming
+        private partial class TokenSpecs // ReSharper disable once InconsistentNaming
         {
             public static readonly TokenSpec[] Ident_Star =
             {
@@ -521,7 +558,7 @@ namespace Fizzler
             };
         }
 
-        void TypeSelectorOrUniversal()
+        private void TypeSelectorOrUniversal()
         {
             //type_selector
             //  : [ namespace_prefix ]? element_name
@@ -536,49 +573,58 @@ namespace Fizzler
             var prefix = TryNamespacePrefix() ?? NamespacePrefix.None;
             var token = Read(TokenSpecs.Ident_Star);
             if (token.Kind == TokenKind.Ident)
+            {
                 _generator.Type(prefix, token.Text);
+            }
             else
+            {
                 _generator.Universal(prefix);
+            }
         }
 
-        Token Peek() => _reader.Peek();
+        private Token Peek() => _reader.Peek();
 
-        Token Read(TokenSpec spec) =>
+        private Token Read(TokenSpec spec) =>
             TryRead(spec)
             ?? throw new FormatException(string.Format(
                     @"Unexpected token {{{0}}} where {{{1}}} was expected.",
                     Peek().Kind, spec));
 
-        Token Read(params TokenSpec[] specs) =>
+        private Token Read(params TokenSpec[] specs) =>
             TryRead(specs)
             ?? throw new FormatException(string.Format(
                    @"Unexpected token {{{0}}} where one of [{1}] was expected.",
                    Peek().Kind,
                    string.Join(", ", from k in specs select k.ToString())));
 
-        Token? TryRead(params TokenSpec[] specs)
+        private Token? TryRead(params TokenSpec[] specs)
         {
             foreach (var kind in specs)
             {
                 var token = TryRead(kind);
                 if (token != null)
+                {
                     return token;
+                }
             }
             return null;
         }
 
-        Token? TryRead(TokenSpec spec)
+        private Token? TryRead(TokenSpec spec)
         {
             var token = Peek();
             if (!spec.Fold(token, (t, a) => a == t.Kind, (t, b) => b == t))
+            {
                 return null;
+            }
+
             _reader.Read();
             return token;
         }
 
-        void Unread(Token token) => _reader.Unread(token);
+        private void Unread(Token token) => _reader.Unread(token);
 
-        static TokenSpec ToTokenSpec(TokenKind kind) => TokenSpec.A(kind);
-        static TokenSpec ToTokenSpec(Token token) => TokenSpec.B(token);
+        private static TokenSpec ToTokenSpec(TokenKind kind) => TokenSpec.A(kind);
+        private static TokenSpec ToTokenSpec(Token token) => TokenSpec.B(token);
     }
 }
